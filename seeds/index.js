@@ -23,6 +23,10 @@ const seedDB = async()=>{
             title: `${sample(descriptors)} ${sample(places)}`,
             description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugiat amet totam quibusdam dolorum perferendis, quia sapiente accusamus ex eum unde tenetur suscipit corrupti, quae, inventore dolor nulla fugit molestiae dolore?",
             price,
+            geometry: {
+              type: "Point",
+              coordinates:[-113.13265, 47.020008]
+            },
             images: [
                 {
                   url: 'https://res.cloudinary.com/dk0voghbf/image/upload/v1727435788/YelpCamp/k5uv97v1gwwhmx61e1dy.jpg',
@@ -32,13 +36,10 @@ const seedDB = async()=>{
                   url: 'https://res.cloudinary.com/dk0voghbf/image/upload/v1727435788/YelpCamp/w1jlz6ce4c0ajabf7t3h.jpg',
                   filename: 'YelpCamp/w1jlz6ce4c0ajabf7t3h'
                 }
-              ]
+            ]
         })
         await camp.save();
     }
-
-    const c = new Campground({title:"purple field"});
-    await c.save();
 }
 
 seedDB().then(()=>{

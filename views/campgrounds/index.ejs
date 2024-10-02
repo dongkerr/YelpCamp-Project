@@ -10,6 +10,8 @@
                 <div class="col-md-4">
                     <% if(campground.images.length){ %>
                     <img class="img-fluid" alt="" src="<%= campground.images[0].url%>">
+                    <% }else{ %>
+                        <img class="img-fluid" alt="" src="https://res.cloudinary.com/dk0voghbf/image/upload/v1727435788/YelpCamp/k5uv97v1gwwhmx61e1dy.jpg">
                     <% } %>
                 </div>
                 <div class="col-md-8">
