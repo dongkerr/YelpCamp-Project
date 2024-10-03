@@ -7,22 +7,24 @@ const ImageSchema = new Schema({
     filename: String
 })
 
-ImageSchema.virtual("thumbnail").get(function(){
+ImageSchema.virtual("thumbnail").get(function () {
     return this.url.replace("/upload", "/upload/w_200");
 })
 
+const opts = { toJSON: { virtuals: true } }
+
 const CampgroundSchema = new Schema({
     title: String,
-    images:[ImageSchema],
+    images: [ImageSchema],
     geometry: {
         type: {
-          type: [String], // Don't do `{ location: { type: String } }`
-          enum: ['Point'], // 'location.type' must be 'Point'
-          required: true
+            type: [String], // Don't do `{ location: { type: String } }`
+            enum: ['Point'], // 'location.type' must be 'Point'
+            required: true
         },
         coordinates: {
-          type: [Number],
-          required: true
+            type: [Number],
+            required: true
         }
     },
     price: Number,
@@ -30,20 +32,24 @@ const CampgroundSchema = new Schema({
     location: String,
     author: {
         type: Schema.Types.ObjectId,
-        ref:"User"
+        ref: "User"
     },
-    reviews:[
+    reviews: [
         {
             type: Schema.Types.ObjectId,
             ref: "Review"
         }
     ]
-});
+}, opts);
+
+CampgroundSchema.virtual("properties.popUpMarkup").get(function () {
+    return `<strong><a href=/campgrounds/${this._id}>${this.title}</a></strong><p>${this.description.substring(0, 20)}...</p>`
+})
 
 CampgroundSchema.post("findOneAndDelete", async function (doc) {
-    if(doc){
+    if (doc) {
         await Review.deleteMany({
-            _id:{
+            _id: {
                 $in: doc.reviews
             }
         })
