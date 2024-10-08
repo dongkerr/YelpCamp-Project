@@ -8,6 +8,8 @@ const map = new mapboxgl.Map({
     zoom: 9, // starting zoom
 });
 
+map.addControl(new mapboxgl.NavigationControl());
+
 //https://docs.mapbox.com/mapbox-gl-js/example/marker-from-geocode/
 new mapboxgl.Marker()
     .setLngLat(goodCampground.geometry.coordinates)
