@@ -3,14 +3,12 @@
 // }
 require("dotenv").config()
 
-console.log(process.env.SECRET)
-console.log(process.env.API_KEY)
-
 const express = require("express");
 const path = require("path")
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate")
 const session = require("express-session")
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash")
 const ExpressError = require("./utils/ExpressError")
 const methodoverride = require("method-override")
@@ -24,6 +22,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const campgroundRoutes = require("./routes/campgrounds")
 const reviewRoutes = require("./routes/reviews")
 const userRoutes = require("./routes/users")
+const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp'
 
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp')
 const db = mongoose.connection;
@@ -43,7 +42,20 @@ app.use(methodoverride("_method"))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize());
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisshouldbeabettersecret!'
+    }
+});
+
+store.on("error", function(e){
+    console.log("SESSION STORE ERROR", e)
+})
+
 const sessionConfig = {
+    store,
     name:"kk-session",
     secret: 'thisshouldbeabettersecret!',
     resave: false,
